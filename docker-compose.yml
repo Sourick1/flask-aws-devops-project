@@ -1,48 +1,15 @@
 services:
 
-  db:
-    image: mysql:8.4
-    container_name: flask_mysql_db
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpass}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-messagesdb}
-      MYSQL_USER: ${MYSQL_USER:-flaskuser}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-flaskpass}
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - flask_net
-    healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$MYSQL_ROOT_PASSWORD || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 40s
-
   web:
-    image: sourick1/flask-mysql-docker-app:latest
+    build: .
     container_name: flask_app
     restart: unless-stopped
     env_file: .env
     environment:
-      MYSQL_HOST: db
+      MYSQL_HOST: flask-db.c76os2wem2n6.ap-south-1.rds.amazonaws.com
       MYSQL_PORT: 3306
-      MYSQL_USER: ${MYSQL_USER:-flaskuser}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-flaskpass}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-messagesdb}
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: flask-db-web
+      MYSQL_DATABASE: flaskdb
     ports:
       - "${FLASK_PORT:-5000}:5000"
-    depends_on:
-      db:
-        condition: service_healthy
-    networks:
-      - flask_net
-
-networks:
-  flask_net:
-    driver: bridge
-
-volumes:
-  mysql_data:
-    driver: local

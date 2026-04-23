@@ -4,12 +4,23 @@ import logging
 from flask import Flask, request, jsonify, render_template_string
 import mysql.connector
 from mysql.connector import Error
+import boto3
+
+app = Flask(__name__)
+s3 = boto3.client('s3')
+
+
+# ✅ EXISTING
+@app.route('/buckets')
+def list_buckets():
+    response = s3.list_buckets()
+    bucket_names = [bucket['Name'] for bucket in response['Buckets']]
+    return {"buckets": bucket_names}
 
 # ── Logging ──────────────────────────────────────────────────────────────────
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
-app = Flask(__name__)
 
 # ── DB Config from env vars ───────────────────────────────────────────────────
 DB_CONFIG = {

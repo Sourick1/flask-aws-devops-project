@@ -62,3 +62,18 @@ DB_NAME=your-db-name
 3. Run with Docker
 docker-compose up --build
 
+⚠️ Note: Docker Compose is used only for local testing.
+Production deployment is done on AWS EC2 via Jenkins pipeline.
+
+🎯 What I Learned
+End-to-end CI/CD pipeline implementation
+Docker-based deployment workflows
+AWS infrastructure integration (EC2, RDS, S3)
+Real-world DevOps practices
+
+
+👨‍💻 Author
+
+Sourick Chowdhury
+Aspiring DevOps Engineer
+
